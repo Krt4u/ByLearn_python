@@ -1,9 +1,18 @@
 import sqlalchemy
 print(sqlalchemy.__version__)
 
-#创建引擎, 得到连接
+#创建引擎, 得到连接, create_engine() 调用本身不会直接建立任何实际的 DBAPI 连接。
 engine = sqlalchemy.create_engine('mysql+pymysql://pythondb:pythondb@192.168.1.18/testdb', echo=False)
-#建立连接
+# 通过构造方式获取连接url
+# url = sqlalchemy.URL.create(
+#     'mysql+pymysql',
+#     username='pythondb',
+#     password='pythondb',
+#     database='testdb',
+#     host='192.168.1.18',
+# )
+# engine = sqlalchemy.create_engine(url=url, echo=False)
+#建立连接, 若使用上下文管理器创建连接，事务在进入时开启
 connection = engine.connect()
 #原始查询
 query = sqlalchemy.text('select * from stu')
