@@ -2,7 +2,7 @@ import sqlalchemy
 
 engine = sqlalchemy.create_engine("mysql+pymysql://pythondb:pythondb@192.168.1.18/testdb", echo=False)
 metedate = sqlalchemy.MetaData()
-
+# 定义表空间的映射对象Table
 department_table = sqlalchemy.Table(
     "department", metedate,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
