@@ -15,7 +15,7 @@ class E(Base):
     id:Mapped[int_pk]   
     name:Mapped[name_pk]
     c_id:Mapped[int] = mapped_column(ForeignKey("c.id"),onupdate="CASCADE", nullable=True)
-    # onupdate="CASCADE" 该参数只能放在子表，说明其可以脱离主表约束，变化值
+    # onupdate="CASCADE" 级联 该参数只能放在子表，说明其可以脱离主表约束，变化值
     cx = relationship("C", back_populates="ex")
     # back_populates参数的值是对方类中对应关系的属性名（字符串形式），因为这是对象之间的关联，而不是数据库表之间的关联
     # 表间关联是基于外键，对象间关联基于 relationship
