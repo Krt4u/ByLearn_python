@@ -1,5 +1,7 @@
 from PySide6.QtWidgets import QApplication, QWidget, QHBoxLayout, QPushButton, QVBoxLayout
 
+# 水平布局管理器和垂直布局布局管理器
+
 app = QApplication([])
 # 初始化一个窗口
 widget = QWidget()
