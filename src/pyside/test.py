@@ -11,19 +11,7 @@ Base.prepare(engine, reflect=True)  # 自动映射所有表为 ORM 类，以键�
 # table = Base.classes.tablename 获取的是该表的类 如orm继承decri_base继承的类创建
 # tb = table.__table__ # 获取对应的表，一个真正的表而不是类来自core，有行列等数据，是sqlalchemy的Table对象
 
-# 代码	得到的是什么
-# Base.classes	automap 的“类字典”，存 ORM 类
-# Base.classes.department	ORM 类（自动生成）
-# Dept.__table__	Table 对象（表结构）
-# Dept.__table__.columns	列对象（字段）
-# 表达式	类型	含义
-# Base.classes	特殊容器（类似 dict）	存 ORM 类
-# Base.classes.keys()	列表	映射类名（通常是表名）
-# Base.classes.department	ORM 类	自动生成的类
-# Dept.__table__	Table 对象	表结构
-# Dept()	ORM 实例	一行数据（对象）
-
-# Base.classes 包含映射后的类，键是表名或类名
+# Base.classes 包含映射后的类，键是表名，值是类名
 mapped_classes = {name: cls for name, cls in Base.classes.items()}
 
 app = QApplication([])
@@ -61,3 +49,18 @@ for class_name in mapped_classes.keys():
 
 window.show()
 app.exec()
+
+
+
+
+# 代码	得到的是什么
+# Base.classes	automap 的“类字典”，存 ORM 类
+# Base.classes.department	ORM 类（自动生成）
+# Dept.__table__	Table 对象（表结构）
+# Dept.__table__.columns	列对象（字段）
+# 表达式	类型	含义
+# Base.classes	特殊容器（类似 dict）	存 ORM 类
+# Base.classes.keys()	列表	映射类名（通常是表名）
+# Base.classes.department	ORM 类	自动生成的类
+# Dept.__table__	Table 对象	表结构
+# Dept()	ORM 实例	一行数据（对象）

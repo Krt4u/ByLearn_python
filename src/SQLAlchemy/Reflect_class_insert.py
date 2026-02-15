@@ -7,7 +7,7 @@ engine = create_engine("mysql+pymysql://pythondb:pythondb@192.168.1.18/testdb")
 #调用时动态生产一个基础类，用于定义映射类的基类
 Base = declarative_base()
 
-#即是直接定义类，也是在定义表
+#即是直接定义类，也是在定义表，一个实例化对象就是一条数据
 class Person(Base):
     __tablename__ = "people" #指定表名
 

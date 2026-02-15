@@ -1,6 +1,7 @@
 高频方法分类
 
 去空白与对齐：strip()、lstrip()、rstrip() 去除空白；center()、ljust()、rjust() 填充对齐。
+strip(str), 去除指定str
 
 查找与判断：find() 返回索引或-1，index() 找不到抛异常；startswith()、endswith() 判断前后缀。
 
