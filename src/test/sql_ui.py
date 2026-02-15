@@ -13,7 +13,7 @@ class Test(Base):
     __tablename__ = 'test'
 
     id:Mapped[id_int]
-    name:Mapped[name_str]
+    name:Mapped[name_str] = mapped_column(unique=True)
 
     def __repr__(self):
         return f"{self.id},{self.name}"
@@ -21,9 +21,22 @@ class Test(Base):
 Base.metadata.create_all(engine)
 
 def insert(_name):
-    Test(name=_name)
+    t = Test(name=_name)
     with Session(engine) as session, session.begin():
-        session.add(Test)
+        session.add(t)
+
+def is_name(_name):
+    with Session(engine) as session:
+        if session.query(Test).filter(Test.name == _name).count(): # 查询返回对象，无论是否存在，因此需要用count来判断，而不是直接查询的结果
+            return True
+    return False
+
+
+def delete(_name):
+    with Session(engine) as session, session.begin():
+        obj = session.query(Test).filter(Test.name == _name).one()
+        session.delete(obj)
+
 
 def srh():
     with Session(engine) as session:
@@ -40,11 +53,14 @@ class ui(QWidget):
         self.setGeometry(300, 300, 500, 300)
         self.layout:QVBoxLayout = QVBoxLayout(self)
         self.list = QListWidget()
-        self.btn = QPushButton('add')
+        self.btn_add = QPushButton('add')
+        self.btn_flush = QPushButton('flush')
+        
         self.input_text = QLineEdit()
 
         self.input_text.setPlaceholderText('enter text')
-        self.btn.clicked.connect(self.add_data)
+        self.btn_add.clicked.connect(self.add_data)
+        self.btn_flush.clicked.connect(self.flush)
 
         self.init_ui()
         self.load_data()
@@ -52,7 +68,8 @@ class ui(QWidget):
     def init_ui(self):
         self.layout.addWidget(self.list)
         self.layout.addWidget(self.input_text)
-        self.layout.addWidget(self.btn)
+        self.layout.addWidget(self.btn_add)
+        self.layout.addWidget(self.btn_flush)
 
     def load_data(self):    # 从数据库中加载数据并添加进入list
         contents = srh()
@@ -61,10 +78,25 @@ class ui(QWidget):
 
     def add_data(self):     # 自定义添加数据
         name = self.input_text.text()
+
         if name.strip():
-            row = self.list.count()
-            self.additem(f"{row+1},{name}")
+            if self.list.count()> 0:
+                widget = self.list.itemWidget(self.list.item(self.list.count()-1))  # 获取最后一个item的widget
+                label = widget.findChild(QLabel)
+                id = label.text().split(',')[0].strip()     # 获取其id
+            else:
+                id = 0
+
+            if  not is_name(name):  # 先判断是否同名
+                self.additem(f"{int(id)+1},{name}")
+                insert(name)    # 添加进入数据库
         self.input_text.clear()
+
+    def flush(self):
+        if self.list.count() > 0:
+            self.list.clear()
+            self.load_data()    # 刷新输出
+
 
     def additem(self, text):    # listItem 的添加函数
         widget = QWidget(self.list)
@@ -77,6 +109,7 @@ class ui(QWidget):
         btn_del.clicked.connect(lambda:self.list.setCurrentItem(item))
         btn_mod.clicked.connect(lambda:self.list.setCurrentItem(item))
 
+        # 绑定槽函数
         btn_del.clicked.connect(self.remove_data)
         btn_mod.clicked.connect(self.mod_data)
 
@@ -90,15 +123,19 @@ class ui(QWidget):
         self.list.addItem(item)
         self.list.setItemWidget(item, widget)
 
-    # 删除item 未实现同步数据库
+    # 删除item
     def remove_data(self):
         if self.ask_() == QMessageBox.Yes:
             item = self.list.currentItem()
+            widget = self.list.itemWidget(item)
+            label = widget.findChild(QLabel)
+            name = label.text().split(',')[1].strip()
+            delete(name)
             self.list.takeItem(self.list.row(item))
         else:
             return
 
-    # 修改item 未实现同步数据库
+    # 修改item - 未能同步到数据库
     def mod_data(self):
         item = self.list.currentItem()
         widget = self.list.itemWidget(item)
@@ -106,6 +143,8 @@ class ui(QWidget):
         text,ok = QInputDialog.getText(self, "modify", 'text', text=label.text())
         if text.strip() and ok:
             label.setText(text)
+
+    # 如何解决数据库主键自增的跨度问题？或者先搞一下登录界面，或者改成本地存储？数据库乱序
          
 
     def ask_(self):
@@ -113,8 +152,6 @@ class ui(QWidget):
         return result
 
             
-
-
 if __name__ == '__main__':
     app = QApplication([])
     T = ui()
