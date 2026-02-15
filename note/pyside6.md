@@ -20,3 +20,12 @@ QStatusBar：状态栏，用于显示应用程序的状态信息。
 QMessageBox：消息框，用于显示提示、警告和错误消息。
 QGraphicsView 和 QGraphicsScene：用于处理 2D 图形和图形场景的组件。
 QCalendarWidget：日历控件，用于显示和选择日期。
+
+QLabel常用的属性在表格中展示
+alignment：标签内容的对齐方式	可以使用 setAlignment()方法设置。对齐方式可以是左对齐、右对齐、居中
+indent：标签文本的缩进（以像素为单位）	可以使用 setIndent()方法设置
+margin：标签内容周围边距的宽度	可以使用 setMargin()方法设置
+pixmap：标签显示的图片	可以使用 setPixmap()方法设置
+text：标签的文本内容	可以使用 setText()方法设置
+textFormat：标签的文本格式	可以使用 setTextFormat()方法设置
+wordWrap：布尔属性，指示标签的自动换行策略	可以使用 setWordWrap()方法设置。如果启用自动换行，文本将根据标签的宽度自动换行显示。

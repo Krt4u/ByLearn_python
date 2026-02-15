@@ -1,4 +1,4 @@
-
+# 介于orm于core的记忆混淆，在这里声明，在此后的所有数据库操作中，若不是特殊需要，则都是以orm方式
 
 import sqlalchemy
 print(sqlalchemy.__version__)
